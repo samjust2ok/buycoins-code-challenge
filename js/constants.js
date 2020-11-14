@@ -15,4 +15,4 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
 const API_ENDPOINT = 'https://api.github.com/graphql';
 const GITHUB_USERNAME = 'samjust2ok';
 const REPO_NO = 20;
-const TOKEN = 'f76fec7c2f3d6864795645350d342fbea04e4700'
+const TOKEN = 'b99616bfaf6f3d4a38b7480eae8af94640657b84'

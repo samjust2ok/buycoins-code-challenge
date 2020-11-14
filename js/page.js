@@ -12,83 +12,87 @@ const navigation = document.querySelector('.openable-nav-item');
 const toggleButton = document.querySelector('.nav-open-toggle');
 
 async function fetchUserDetails(){
-    let response = await graphqlQueryFetch(`
-        query getRepositories($account: String! $count: Int!){
-            user(login: $account){
-                name
-                avatarUrl
-                login
-                following {
-                    totalCount
-                }
-                followers {
-                    totalCount
-                }
-                starredRepositories {
-                    totalCount
-                }
-                repositories(first: $count, orderBy: {direction: DESC, field: CREATED_AT}){
-                    nodes {
-                        name
-                        updatedAt
-                        isFork
-                        isPrivate
-                        description
-                        stargazerCount
-                        forkCount
-                        licenseInfo {
+    try{
+        let response = await graphqlQueryFetch(`
+            query getRepositories($account: String! $count: Int!){
+                user(login: $account){
+                    name
+                    avatarUrl
+                    login
+                    following {
+                        totalCount
+                    }
+                    followers {
+                        totalCount
+                    }
+                    starredRepositories {
+                        totalCount
+                    }
+                    repositories(first: $count, orderBy: {direction: DESC, field: CREATED_AT}){
+                        nodes {
                             name
-                        }
-                        primaryLanguage {
-                            color
-                            name
+                            updatedAt
+                            isFork
+                            isPrivate
+                            description
+                            stargazerCount
+                            forkCount
+                            licenseInfo {
+                                name
+                            }
+                            primaryLanguage {
+                                color
+                                name
+                            }
                         }
                     }
                 }
             }
-        }
-    `,{
-        account: GITHUB_USERNAME,
-        count: REPO_NO
-    });
+        `,{
+            account: GITHUB_USERNAME,
+            count: REPO_NO
+        });
 
-    const { 
-        user: { 
+        const { 
+            user: { 
+                avatarUrl,
+                name,
+                login,
+                following, 
+                followers, 
+                starredRepositories, 
+                repositories: { 
+                    nodes
+                } 
+            }
+        } = response;
+
+        const data = {
+            repositories: nodes.map(node=>{
+                const { primaryLanguage,description, isPrivate, forkCount, isFork, licenseInfo, name, stargazerCount, updatedAt} = node;
+                return {
+                    name,
+                    language: primaryLanguage,
+                    description,
+                    isFork,
+                    licenseInfo,
+                    isPrivate,
+                    forkCount,
+                    stargazerCount,
+                    updatedAt
+                }
+            }),
             avatarUrl,
             name,
-            login,
-            following, 
-            followers, 
-            starredRepositories, 
-            repositories: { 
-                nodes
-            } 
+            username: login,
+            following: following.totalCount,
+            followers: followers.totalCount,
+            starredRepositories: starredRepositories.totalCount
         }
-    } = response;
-
-    const data = {
-        repositories: nodes.map(node=>{
-            const { primaryLanguage,description, isPrivate, forkCount, isFork, licenseInfo, name, stargazerCount, updatedAt} = node;
-            return {
-                name,
-                language: primaryLanguage,
-                description,
-                isFork,
-                licenseInfo,
-                isPrivate,
-                forkCount,
-                stargazerCount,
-                updatedAt
-            }
-        }),
-        avatarUrl,
-        name,
-        username: login,
-        following: following.totalCount,
-        followers: followers.totalCount,
-        starredRepositories: starredRepositories.totalCount
+        return data;
+    }catch(e){
+        throw e
     }
-    return data;
 }
 
 
@@ -99,21 +103,28 @@ function updateRepoList(repositories){
 }
 
 async function main(){
-    setPageVisibility(false)
-    let data = await fetchUserDetails();
-    let { repositories,name,following, username,followers,avatarUrl,starredRepositories } = data;
-    updateRepoList(repositories);
-    userImages.forEach(image=>{
-        image.src = avatarUrl
-    })
-    userNames.forEach(name=>{
-        sT(name,username)
-    })
-    sT(followingCount,fN(following))
-    sT(followersCount,fN(followers))
-    sT(starsCount,fN(starredRepositories))
-    sT(fullName,name)
-    sT(repoCount,fN(repositories.length))
+    setPageVisibility(false);
+    try{
+        let data = await fetchUserDetails();
+        if(data){
+            let { repositories,name,following, username,followers,avatarUrl,starredRepositories } = data;
+            updateRepoList(repositories);
+            userImages.forEach(image=>{
+                image.src = avatarUrl
+            })
+            userNames.forEach(name=>{
+                sT(name,username)
+            })
+            sT(followingCount,fN(following))
+            sT(followersCount,fN(followers))
+            sT(starsCount,fN(starredRepositories))
+            sT(fullName,name)
+            sT(repoCount,fN(repositories.length))
+            setPageVisibility(true)
+        }
+    }catch(e){
+        console.error("ERROR")
+    }
 
     //Observe Name Element
     const nameObserver = new IntersectionObserver(function(entries){
@@ -137,9 +148,6 @@ async function main(){
             navigation.classList.add('open')
         }
     })
-
-    setPageVisibility(true)
-
 }
 
 
