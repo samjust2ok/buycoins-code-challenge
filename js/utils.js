@@ -1,6 +1,6 @@
 const headers = new Headers({
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${process.env.TOKEN}`
+    'Authorization': `Bearer ${TOKEN}`
 });
 
 function cE(elem,className){
@@ -151,7 +151,7 @@ class Repo {
             const label = cE('span','repo-type-label ml-2 flex-shrink-0 font-semibold inline-block');
             aC(h3,sT(label,'Private'))
         }
-
+        
         if(repo.forkCount > 0){
             const forks = cE('a','mr-3 cursor-pointer flex-shrink-0');
             aC(forks,createSVG(SVG.FORK));
@@ -184,4 +184,6 @@ class Repo {
         return this.repoElem
     }
 }
+
+setPageVisibility(false)
 

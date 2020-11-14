@@ -104,7 +104,6 @@ function updateRepoList(repositories){
 }
 
 async function main(){
-    setPageVisibility(false);
     try{
         let data = await fetchUserDetails();
         if(data){
