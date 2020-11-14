@@ -98,20 +98,16 @@ function parseDate(date){
 }
 
 async function graphqlQueryFetch(query,variables){
-    try {
-        let response = await fetch(API_ENDPOINT,{
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-                query,
-                variables,
-            })
+    let response = await fetch(API_ENDPOINT,{
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            query,
+            variables,
         })
-        let parsed = await response.json()
-        return parsed.data;
-    }catch(e){
-        console.log('AN ERROR OCCURED')
-    }
+    })
+    let parsed = await response.json()
+    return parsed.data;
 }
 
 function setPageVisibility(visible){

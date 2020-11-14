@@ -52,44 +52,45 @@ async function fetchUserDetails(){
             account: GITHUB_USERNAME,
             count: REPO_NO
         });
-
-        const { 
-            user: { 
+        if(response){
+            const { 
+                user: { 
+                    avatarUrl,
+                    name,
+                    login,
+                    following, 
+                    followers, 
+                    starredRepositories, 
+                    repositories: { 
+                        nodes
+                    } 
+                }
+            } = response;
+    
+            const data = {
+                repositories: nodes.map(node=>{
+                    const { primaryLanguage,description, isPrivate, forkCount, isFork, licenseInfo, name, stargazerCount, updatedAt} = node;
+                    return {
+                        name,
+                        language: primaryLanguage,
+                        description,
+                        isFork,
+                        licenseInfo,
+                        isPrivate,
+                        forkCount,
+                        stargazerCount,
+                        updatedAt
+                    }
+                }),
                 avatarUrl,
                 name,
-                login,
-                following, 
-                followers, 
-                starredRepositories, 
-                repositories: { 
-                    nodes
-                } 
+                username: login,
+                following: following.totalCount,
+                followers: followers.totalCount,
+                starredRepositories: starredRepositories.totalCount
             }
-        } = response;
-
-        const data = {
-            repositories: nodes.map(node=>{
-                const { primaryLanguage,description, isPrivate, forkCount, isFork, licenseInfo, name, stargazerCount, updatedAt} = node;
-                return {
-                    name,
-                    language: primaryLanguage,
-                    description,
-                    isFork,
-                    licenseInfo,
-                    isPrivate,
-                    forkCount,
-                    stargazerCount,
-                    updatedAt
-                }
-            }),
-            avatarUrl,
-            name,
-            username: login,
-            following: following.totalCount,
-            followers: followers.totalCount,
-            starredRepositories: starredRepositories.totalCount
+            return data;
         }
-        return data;
     }catch(e){
         throw e
     }
@@ -123,7 +124,7 @@ async function main(){
             setPageVisibility(true)
         }
     }catch(e){
-        console.error("ERROR")
+        console.error("ERROR",e)
     }
 
     //Observe Name Element
