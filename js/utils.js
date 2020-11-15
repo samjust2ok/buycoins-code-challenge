@@ -3,7 +3,7 @@ const headers = new Headers({
     'Authorization': `Bearer ${TOKEN}`
 });
 
-function cE(elem,className){
+function createElement(elem,className){
     const element = document.createElement(elem);
     element.setAttribute('class',className)
     return element
@@ -17,7 +17,7 @@ function aC(elem,...children){
     return elem;
 }
 
-function sT(elem,text){
+function setTextOnElement(elem,text){
     aC(elem,document.createTextNode(text))
     return elem;
 }
@@ -43,7 +43,7 @@ function getForkedLocationNameFromUrl(url){
 }
 
 // Simple function to format number
-function fN(number){
+function fomartNumber(number){
     return new Intl.NumberFormat(
         'en-IN',
         {
@@ -118,65 +118,65 @@ function setPageVisibility(visible){
 class Repo {
     repoElem;
     constructor(repo){
-        this.repoElem = cE('li','w-full border-b repo justify-between flex py-4');
+        this.repoElem = createElement('li','w-full border-b repo justify-between flex py-4');
         const language = repo.language;
-        const dataContainer = cE('div','flex-grow w-6-l lg-w-75');
-        const star = cE('div','w-6 lg-w-25');
-        const repoName = cE('div','mb-1 repo-name inline-block');
-        const repoDesc = cE('div','repo-desc');
-        const repoMatrices = cE('div','mt-2 flex flex-wrap gap-y-1 repo-metrices');
-        const h3 = cE('h3','font-bold');
-        const a = cE('a','break-all');
-        const starButton = cE('button','button repo-star btn-secondary button-shadow-small font-bold');
-        const stbDiv = cE('div','flex justify-end')
-        sT(a,repo.name);
+        const dataContainer = createElement('div','flex-grow w-6-l lg-w-75');
+        const star = createElement('div','w-6 lg-w-25');
+        const repoName = createElement('div','mb-1 repo-name inline-block');
+        const repoDesc = createElement('div','repo-desc');
+        const repoMatrices = createElement('div','mt-2 flex flex-wrap gap-y-1 repo-metrices');
+        const h3 = createElement('h3','font-bold');
+        const a = createElement('a','break-all');
+        const starButton = createElement('button','button repo-star btn-secondary button-shadow-small font-bold');
+        const stbDiv = createElement('div','flex justify-end')
+        setTextOnElement(a,repo.name);
         aC(repoName,h3)
         aC(h3,a)
 
         if(repo.description){
-            const p = cE('p','mb-2 pr-4 inline-block w-75');
-            sT(p,repo.description)
+            const p = createElement('p','mb-2 pr-4 inline-block w-75');
+            setTextOnElement(p,repo.description)
             aC(repoDesc,p)
         }
 
         if(language){
-            const colorIndicator = cE('span','mr-3');
-            const color = cE('span','language-color-indicator inline-block mr-1 relative rounded-full');
+            const colorIndicator = createElement('span','mr-3');
+            const color = createElement('span','language-color-indicator inline-block mr-1 relative rounded-full');
             color.style.backgroundColor = language.color;
-            aC(colorIndicator,color,sT(cE('span','break-all'),language.name));
+            aC(colorIndicator,color,setTextOnElement(createElement('span','break-all'),language.name));
             aC(repoMatrices,colorIndicator)
         }
 
         if(repo.isPrivate){
-            const label = cE('span','repo-type-label ml-2 flex-shrink-0 font-semibold inline-block');
-            aC(h3,sT(label,'Private'))
+            const label = createElement('span','repo-type-label ml-2 flex-shrink-0 font-semibold inline-block');
+            aC(h3,setTextOnElement(label,'Private'))
         }
         
         if(repo.forkCount > 0){
-            const forks = cE('a','mr-3 cursor-pointer flex-shrink-0');
+            const forks = createElement('a','mr-3 cursor-pointer flex-shrink-0');
             aC(forks,createSVG(SVG.FORK));
-            sT(forks,` ${fN(repo.forkCount)}`)
+            setTextOnElement(forks,` ${fomartNumber(repo.forkCount)}`)
             aC(repoMatrices,forks)
         }
 
         if(repo.licenseInfo?.name){
-            const license = cE('span','mr-3 flex-shrink-0 break-all');
-            aC(repoMatrices,sT(aC(license,createSVG(SVG.LICENSE)), ` ${repo.licenseInfo.name}`))
+            const license = createElement('span','mr-3 flex-shrink-0 break-all');
+            aC(repoMatrices,setTextOnElement(aC(license,createSVG(SVG.LICENSE)), ` ${repo.licenseInfo.name}`))
         }
 
         if(repo.stargazerCount > 0){
-            const stars = cE('a','mr-3 cursor-pointer flex-shrink-0');
-            aC(repoMatrices,sT(aC(stars,createSVG(SVG.STAR)),` ${fN(repo.stargazerCount)}`))
+            const stars = createElement('a','mr-3 cursor-pointer flex-shrink-0');
+            aC(repoMatrices,setTextOnElement(aC(stars,createSVG(SVG.STAR)),` ${fomartNumber(repo.stargazerCount)}`))
         }
 
         if(repo.updatedAt){
-            const time = cE('span');
-            sT(time,'Updated');
-            aC(repoMatrices,aC(time,sT(cE('span','last-update-time'),` ${parseDate(repo.updatedAt)}`)))
+            const time = createElement('span');
+            setTextOnElement(time,'Updated');
+            aC(repoMatrices,aC(time,setTextOnElement(createElement('span','last-update-time'),` ${parseDate(repo.updatedAt)}`)))
         }
 
         aC(dataContainer,repoName,repoDesc,repoMatrices);
-        aC(star,aC(stbDiv,sT(aC(starButton,createSVG(SVG.STAR)),' Star')));
+        aC(star,aC(stbDiv,setTextOnElement(aC(starButton,createSVG(SVG.STAR)),' Star')));
         aC(this.repoElem,dataContainer,star);
     }
 

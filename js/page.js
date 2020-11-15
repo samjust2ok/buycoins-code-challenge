@@ -113,13 +113,13 @@ async function main(){
                 image.src = avatarUrl
             })
             userNames.forEach(name=>{
-                sT(name,username)
+                setTextOnElement(name,username)
             })
-            sT(followingCount,fN(following))
-            sT(followersCount,fN(followers))
-            sT(starsCount,fN(starredRepositories))
-            sT(fullName,name)
-            sT(repoCount,fN(repositories.length))
+            setTextOnElement(followingCount,fomartNumber(following))
+            setTextOnElement(followersCount,fomartNumber(followers))
+            setTextOnElement(starsCount,fomartNumber(starredRepositories))
+            setTextOnElement(fullName,name)
+            setTextOnElement(repoCount,fomartNumber(repositories.length))
             setPageVisibility(true)
         }
     }catch(e){
